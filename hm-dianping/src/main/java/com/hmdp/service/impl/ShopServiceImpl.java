@@ -1,5 +1,6 @@
 package com.hmdp.service.impl;
 
+import cn.hutool.cache.Cache;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
@@ -13,6 +14,7 @@ import com.hmdp.dto.Result;
 import com.hmdp.entity.Shop;
 import com.hmdp.mapper.ShopMapper;
 import com.hmdp.service.IShopService;
+import com.hmdp.utils.CacheClient;
 import com.hmdp.utils.RedisConstants;
 import com.hmdp.utils.RedisData;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -42,16 +44,22 @@ import static com.hmdp.utils.RedisConstants.*;
 public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IShopService {
 
     private static final ExecutorService CACHE_REBUILD_EXECUTOR = Executors.newFixedThreadPool(10);
+
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private CacheClient cacheClient;
 
     @Override
     public Result queryById(Long id) {
         //缓存穿透
-        //Shop shop = queryWithPassThrough(id);
+//        Shop shop = cacheClient.queryWithPassThrough(CACHE_SHOP_KEY, id ,Shop.class, this::getById, CACHE_SHOP_TTL, TimeUnit.MINUTES);
+//        Shop shop = queryWithPassThrough(id);
 
         //缓存击穿：互斥锁
-        Shop shop = queryWithMutex(id);
+        Shop shop = cacheClient.queryWithLogicalExpire(CACHE_SHOP_KEY, id, Shop.class, this::getById, CACHE_SHOP_TTL, TimeUnit.MINUTES);
+//        Shop shop = queryWithMutex(id);
         return Result.ok(shop);
     }
 
