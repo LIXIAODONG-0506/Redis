@@ -5,17 +5,17 @@ spring:
     name: hmdp
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://49.232.211.230:3306/dong_dianping?useSSL=false&serverTimezone=UTC
-    username: root
-    password: root
-#    url: jdbc:mysql://127.0.0.1:3306/dong_dianping?useSSL=false&serverTimezone=UTC
+#    url: jdbc:mysql://49.232.211.230:3306/dong_dianping?useSSL=false&serverTimezone=UTC
 #    username: root
-#    password: 123456
+#    password: L4D7S8iNpP%d
+    url: jdbc:mysql://127.0.0.1:3306/dong_dianping?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
   redis:
-#    host: 127.0.0.1
-    host: 49.232.211.230
+    host: 127.0.0.1
+#    host: 49.232.211.230
     port: 6379
-    database: 15
+#    database: 15
     lettuce:
       pool:
         max-active: 10
